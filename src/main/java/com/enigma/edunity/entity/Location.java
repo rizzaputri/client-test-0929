@@ -11,13 +11,15 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name = "m_location")
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @Enumerated(EnumType.STRING)
     private City city;
 
+    @Enumerated(EnumType.STRING)
     private Province province;
 }

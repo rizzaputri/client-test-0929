@@ -1,7 +1,6 @@
 package com.enigma.edunity.dto.response;
 
 import com.enigma.edunity.entity.Location;
-import com.enigma.edunity.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +18,5 @@ public class RegisterStudentResponse {
     private String email;
     private String phoneNumber;
     private Location location;
-    private List<Role> roles;
+    private List<String> roles;
 }

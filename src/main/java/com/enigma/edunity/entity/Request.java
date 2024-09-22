@@ -13,7 +13,7 @@ import java.sql.Time;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name = "t_request")
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

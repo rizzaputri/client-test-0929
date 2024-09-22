@@ -1,6 +1,5 @@
 package com.enigma.edunity.dto.request;
 
-import com.enigma.edunity.entity.Location;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
@@ -35,5 +34,5 @@ public class RegisterStudentRequest {
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-    private Location location;
+    private LocationRequest location;
 }

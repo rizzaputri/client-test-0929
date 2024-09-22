@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name = "m_user_account")
 public class UserAccount implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -26,6 +26,9 @@ public class UserAccount implements UserDetails {
 
     @Column(nullable = false, unique = true)
     private String password;
+
+    @Column(name = "is_enable")
+    private Boolean isEnable;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
@@ -64,6 +67,6 @@ public class UserAccount implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnable;
     }
 }
