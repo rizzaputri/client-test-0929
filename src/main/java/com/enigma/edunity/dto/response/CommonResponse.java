@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommonResponse<T> {
-    private String message;
     private Integer statusCode;
+    private String message;
     private T data;
     private PagingResponse paging;
 }

@@ -28,8 +28,8 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> req
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/api/v1/tutor-register").permitAll()
-                        .requestMatchers("/api/v1/student-register").permitAll()
+                        .requestMatchers("/api/v1/tutor/register").permitAll()
+                        .requestMatchers("/api/v1/student/register").permitAll()
                         .requestMatchers("/api/v1/login").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(

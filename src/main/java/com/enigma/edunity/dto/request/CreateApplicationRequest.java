@@ -16,7 +16,7 @@ import java.sql.Time;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRequestRequest {
+public class CreateApplicationRequest {
     @NotBlank(message = "Subject ID must not be blank")
     private String subjectId;
 

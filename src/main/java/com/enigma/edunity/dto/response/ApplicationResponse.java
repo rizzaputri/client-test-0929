@@ -12,7 +12,7 @@ import java.sql.Time;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRequestResponse {
+public class ApplicationResponse {
     private String requestId;
     private StudentResponse student;
     private SubjectResponse subject;

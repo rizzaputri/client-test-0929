@@ -13,8 +13,8 @@ import java.sql.Time;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "t_request")
-public class Request {
+@Table(name = "t_application")
+public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -26,6 +26,10 @@ public class Request {
     @Temporal(TemporalType.TIME)
     @JsonFormat(pattern = "HH-mm")
     private Time time;
+
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 
     @ManyToOne
     @JoinColumn(name = "subject_id")

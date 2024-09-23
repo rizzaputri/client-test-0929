@@ -11,8 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateSubjectRequest {
+public class UpdateSubjectRequest {
+    @NotBlank(message = "Subject ID must not be blank")
+    private String id;
+
     @NotBlank(message = "Subject name must not be blank")
-    @Pattern(regexp = "^[A-Z].*", message = "Subject name must be started with uppercase letter")
+    @Pattern(regexp = "^[A-Z].*")
     private String subjectName;
 }
