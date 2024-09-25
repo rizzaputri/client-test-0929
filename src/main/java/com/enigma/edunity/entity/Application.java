@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -25,7 +25,9 @@ public class Application {
 
     @Temporal(TemporalType.TIME)
     @JsonFormat(pattern = "HH-mm")
-    private Time time;
+    private LocalTime time;
+
+    private Boolean status;
 
     @ManyToOne
     @JoinColumn(name = "student_id")
@@ -34,4 +36,8 @@ public class Application {
     @ManyToOne
     @JoinColumn(name = "subject_id")
     private Subject subject;
+
+    @ManyToOne
+    @JoinColumn(name = "tutor_id")
+    private Tutor tutor;
 }

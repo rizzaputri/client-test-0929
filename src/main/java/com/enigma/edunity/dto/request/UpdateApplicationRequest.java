@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocationRequest {
-    @NotBlank(message = "City must not be null")
-    @Enumerated(EnumType.STRING)
-    private String city;
+public class UpdateApplicationRequest {
+    @NotBlank(message = "Application ID must not be blank")
+    private String id;
 
-    @NotBlank(message = "Province must not be null")
+    private String subjectId;
+
     @Enumerated(EnumType.STRING)
-    private String province;
+    private String day;
+
+    private String time;
 }

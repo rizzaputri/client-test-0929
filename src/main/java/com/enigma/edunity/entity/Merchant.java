@@ -16,7 +16,8 @@ public class Merchant {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String shop_name;
+    @Column(name = "shop_name")
+    private String shopName;
 
     private ShopCategory category;
 

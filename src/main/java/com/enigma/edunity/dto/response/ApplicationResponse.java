@@ -6,16 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApplicationResponse {
-    private String requestId;
+    private String applicationId;
     private StudentResponse student;
     private SubjectResponse subject;
+    private String tutorId;
     private Day day;
-    private Time time;
+    private LocalTime time;
+    private Boolean status;
 }

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping(path = "/api/v1/student/register")
+    @PostMapping(path = "/api/v1/students/register")
     public ResponseEntity<CommonResponse<RegisterStudentResponse>> registerStudent(
             @RequestBody RegisterStudentRequest request
     ) {
@@ -36,7 +36,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping(path = "/api/v1/tutor/register")
+    @PostMapping(path = "/api/v1/tutors/register")
     public ResponseEntity<CommonResponse<RegisterTutorResponse>> registerTutor(
             @RequestBody RegisterTutorRequest request
     ) {

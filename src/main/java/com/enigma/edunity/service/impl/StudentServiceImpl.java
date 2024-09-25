@@ -1,11 +1,17 @@
 package com.enigma.edunity.service.impl;
 
+import com.enigma.edunity.constant.City;
+import com.enigma.edunity.constant.Province;
+import com.enigma.edunity.dto.request.UpdateStudentRequest;
 import com.enigma.edunity.dto.response.StudentResponse;
+import com.enigma.edunity.dto.response.UpdateStudentResponse;
 import com.enigma.edunity.entity.Student;
 import com.enigma.edunity.repository.StudentRepository;
+import com.enigma.edunity.repository.UserAccountRepository;
 import com.enigma.edunity.service.StudentService;
 import com.enigma.edunity.service.UserService;
 import com.enigma.edunity.specification.StudentSpecification;
+import com.enigma.edunity.utility.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,15 +19,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
+
     private final UserService userService;
+
+    private final ValidationUtil validationUtil;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -49,11 +62,17 @@ public class StudentServiceImpl implements StudentService {
     @Transactional(readOnly = true)
     @Override
     public StudentResponse getStudentById(String id) {
-        if (userService.getByContext().getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        List<String> roles = userService.getByContext().getAuthorities().stream()
+                .map(Object::toString).toList();
+        if (roles.contains("ROLE_ADMIN")) {
             Student student = getById(id);
             return ResponseBuilder(student);
+        } else if (roles.contains("ROLE_STUDENT")) {
+            Student student = getByUsername();
+            return ResponseBuilder(student);
         } else {
-            return null;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "You don't have permission to access this resource");
         }
     }
 
@@ -74,6 +93,45 @@ public class StudentServiceImpl implements StudentService {
         students = studentRepository.findAll(specification, pageable);
 
         return students.map(this::ResponseBuilder);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public UpdateStudentResponse updateStudent(UpdateStudentRequest request) {
+        validationUtil.validate(request);
+        Student student = getByUsername();
+
+        if (request.getUsername() != null) {
+            if (userService.findByUsername(student.getUserAccount().getUsername()) != null) {
+                throw new IllegalArgumentException("Username already exist");
+            }
+            student.getUserAccount().setUsername(request.getUsername());
+        }
+        if (request.getPassword() != null) {
+            String hashPassword = passwordEncoder.encode(request.getPassword());
+            student.getUserAccount().setPassword(hashPassword);
+        }
+        if (request.getName() != null) {
+            student.setName(request.getName());
+        }
+        if (request.getEmail() != null) {
+            student.setEmail(request.getEmail());
+        }
+        if (request.getPhoneNumber() != null) {
+            student.setPhoneNumber(request.getPhoneNumber());
+        }
+        if (request.getLocation() != null) {
+            student.getLocation().setCity(City.valueOf(request.getLocation().getCity()));
+            student.getLocation().setProvince(Province.valueOf(request.getLocation().getProvince()));
+        }
+
+        return UpdateStudentResponse.builder()
+                .username(student.getUserAccount().getUsername())
+                .name(student.getName())
+                .email(student.getEmail())
+                .phoneNumber(student.getPhoneNumber())
+                .location(student.getLocation())
+                .build();
     }
 
     @Transactional(rollbackFor = Exception.class)

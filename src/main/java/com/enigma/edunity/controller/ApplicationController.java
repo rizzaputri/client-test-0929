@@ -19,12 +19,13 @@ import java.util.List;
 public class ApplicationController {
     private final ApplicationService applicationService;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TUTOR', 'ROLE_STUDENT')")
     @GetMapping(path = "/{id}")
     public ResponseEntity<CommonResponse<ApplicationResponse>> getApplicationById(
             @PathVariable String id
     ) {
-        ApplicationResponse application = applicationService.getRequestById(id);
+        System.out.println("===" + id + "===");
+        ApplicationResponse application = applicationService.getApplicationById(id);
         CommonResponse<ApplicationResponse> response = CommonResponse
                 .<ApplicationResponse>builder()
                 .statusCode(HttpStatus.OK.value())
@@ -35,6 +36,7 @@ public class ApplicationController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TUTOR')")
     @GetMapping
     public ResponseEntity<CommonResponse<List<ApplicationResponse>>> getAllApplications(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
@@ -44,12 +46,14 @@ public class ApplicationController {
             @RequestParam(name = "day", required = false) String day,
             @RequestParam(name = "time", required = false) String time
     ) {
-        Page<ApplicationResponse> pagedApplications = applicationService.getAllRequests(page, size, student, subject, day, time);
+        System.out.println("page: " + page + ", size: " + size);
+        Page<ApplicationResponse> pagedApplications = applicationService.getAllApplications(
+                page, size, student, subject, day, time);
 
         CommonResponse<List<ApplicationResponse>> response = CommonResponse
                 .<List<ApplicationResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Successfully fetch all requests")
+                .message("Successfully fetch all applications")
                 .data(pagedApplications.getContent())
                 .paging(PagingResponse.builder()
                         .totalPages(pagedApplications.getTotalPages())
@@ -66,14 +70,15 @@ public class ApplicationController {
     public ResponseEntity<CommonResponse<?>> deleteApplication(
             @PathVariable String id
     ) {
-        ApplicationResponse application = applicationService.getRequestById(id);
+        System.out.println("===" + id + "===");
+        ApplicationResponse application = applicationService.getApplicationById(id);
         String studentName = application.getStudent().getName();
 
-        applicationService.deleteRequestById(id);
+        applicationService.deleteApplication(id);
         CommonResponse<?> response = CommonResponse
                 .builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Successfully delete data of " + studentName)
+                .message("Successfully delete data application of " + studentName)
                 .data(application)
                 .paging(null)
                 .build();

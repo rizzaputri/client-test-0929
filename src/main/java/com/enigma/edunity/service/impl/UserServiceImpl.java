@@ -20,6 +20,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
+    public UserAccount findByUsername(String username) {
+        return userAccountRepository.findByUsername(username).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public UserAccount getByUserId(String id) {
         return userAccountRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
