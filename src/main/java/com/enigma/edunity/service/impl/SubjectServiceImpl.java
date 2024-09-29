@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SubjectServiceImpl implements SubjectService {
@@ -47,6 +49,18 @@ public class SubjectServiceImpl implements SubjectService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subject not found")
         );
         return ResponseBuilder(subject);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Subject> getAllSubjects() {
+        return subjectRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Subject> getAllSubjectsByStudentId(String studentId) {
+        return subjectRepository.findAllByStudentId(studentId);
     }
 
     @Transactional(readOnly = true)

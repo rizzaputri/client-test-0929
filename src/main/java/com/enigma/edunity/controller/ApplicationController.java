@@ -60,6 +60,8 @@ public class ApplicationController {
                         .totalElements(pagedApplications.getTotalElements())
                         .page(pagedApplications.getNumber())
                         .size(pagedApplications.getSize())
+                        .hasNext(pagedApplications.hasNext())
+                        .hasPrevious(pagedApplications.hasPrevious())
                         .build())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);

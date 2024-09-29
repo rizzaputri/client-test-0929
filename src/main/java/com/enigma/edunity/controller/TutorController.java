@@ -58,6 +58,8 @@ public class TutorController {
                         .totalElements(pagedTutors.getTotalElements())
                         .page(pagedTutors.getNumber())
                         .size(pagedTutors.getSize())
+                        .hasNext(pagedTutors.hasNext())
+                        .hasPrevious(pagedTutors.hasPrevious())
                         .build())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -138,6 +140,8 @@ public class TutorController {
                         .totalElements(pagedApplications.getTotalElements())
                         .page(pagedApplications.getNumber())
                         .size(pagedApplications.getSize())
+                        .hasNext(pagedApplications.hasNext())
+                        .hasPrevious(pagedApplications.hasPrevious())
                         .build())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);

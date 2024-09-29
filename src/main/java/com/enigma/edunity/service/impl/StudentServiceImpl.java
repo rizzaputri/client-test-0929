@@ -95,6 +95,12 @@ public class StudentServiceImpl implements StudentService {
         return students.map(this::ResponseBuilder);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public UpdateStudentResponse updateStudent(UpdateStudentRequest request) {

@@ -4,7 +4,9 @@ import com.enigma.edunity.dto.request.CreateApplicationRequest;
 import com.enigma.edunity.dto.request.UpdateApplicationRequest;
 import com.enigma.edunity.dto.request.UpdateStudentRequest;
 import com.enigma.edunity.dto.response.*;
+import com.enigma.edunity.entity.Report;
 import com.enigma.edunity.service.ApplicationService;
+import com.enigma.edunity.service.ReportService;
 import com.enigma.edunity.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import java.util.List;
 public class StudentController {
     private final StudentService studentService;
     private final ApplicationService applicationService;
+    private final ReportService reportService;
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STUDENT')")
     @GetMapping({"/{id}", "/profiles"})
@@ -58,6 +61,8 @@ public class StudentController {
                         .totalElements(pagedStudents.getTotalElements())
                         .page(pagedStudents.getNumber())
                         .size(pagedStudents.getSize())
+                        .hasNext(pagedStudents.hasNext())
+                        .hasPrevious(pagedStudents.hasPrevious())
                         .build())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -138,6 +143,8 @@ public class StudentController {
                         .totalElements(pagedApplications.getTotalElements())
                         .page(pagedApplications.getNumber())
                         .size(pagedApplications.getSize())
+                        .hasNext(pagedApplications.hasNext())
+                        .hasPrevious(pagedApplications.hasPrevious())
                         .build())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -158,6 +165,30 @@ public class StudentController {
                         " on " + initialApplication.getDay() + " at " + initialApplication.getTime())
                 .data(application)
                 .paging(null)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    @GetMapping(path = "/reports")
+    public ResponseEntity<CommonResponse<List<ReportResponse>>> getAllReports(
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "size", defaultValue = "10") Integer size
+    ) {
+        Page<ReportResponse> pagedReports = reportService.getReports(page, size);
+        CommonResponse<List<ReportResponse>> response = CommonResponse
+                .<List<ReportResponse>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("Successfully fetch all reports")
+                .data(pagedReports.getContent())
+                .paging(PagingResponse.builder()
+                        .totalPages(pagedReports.getTotalPages())
+                        .totalElements(pagedReports.getTotalElements())
+                        .page(pagedReports.getNumber())
+                        .size(pagedReports.getSize())
+                        .hasNext(pagedReports.hasNext())
+                        .hasPrevious(pagedReports.hasPrevious())
+                        .build())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

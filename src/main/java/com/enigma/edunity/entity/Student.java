@@ -3,6 +3,8 @@ package com.enigma.edunity.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -31,4 +33,7 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "location_id")
     private Location location;
+
+    @OneToMany(mappedBy = "student")
+    private List<Attendance> attendances;
 }

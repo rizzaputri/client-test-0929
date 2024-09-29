@@ -71,6 +71,8 @@ public class SubjectController {
                         .totalElements(pagedSubjects.getTotalElements())
                         .page(pagedSubjects.getNumber())
                         .size(pagedSubjects.getSize())
+                        .hasNext(pagedSubjects.hasNext())
+                        .hasPrevious(pagedSubjects.hasPrevious())
                         .build())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);

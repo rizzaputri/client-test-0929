@@ -385,10 +385,20 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public ApplicationResponse acceptApplication(AcceptApplicationRequest request) {
-        Application application = getById(request.getApplicationId());
-        application.setStatus(true);
-
         Tutor tutor = tutorService.getByUsername();
+        if (tutor.getSubjects().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You have to update your subject first");
+        }
+
+        Application application = getById(request.getApplicationId());
+        if (application.getStatus()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Application already taken");
+        }
+        if (!tutor.getSubjects().contains(application.getSubject())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The application doesn't correspond your subjects");
+        }
+
+        application.setStatus(true);
         application.setTutor(tutor);
         return ResponseBuilder(application);
     }
